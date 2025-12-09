@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sozo Skills - Training Application</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+        p {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            background: #5568d3;
+        }
+        .btn-admin {
+            background: #e74c3c;
+            display: none;
+        }
+        .btn-admin:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="logo" onclick="secretClick()">🎓 Sozo Skills</h1>
+        <p>Welcome to the Sozo Skills Training Application Portal. Start your journey to new skills and opportunities!</p>
+        
+        <a href="index.html" class="btn">Apply Now</a>
+        <br>
+        <a href="admin-login.html" class="btn btn-admin" id="adminBtn">Admin Access</a>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        function secretClick() {
+            clickCount++;
+            if (clickCount === 20) {
+                document.getElementById('adminBtn').style.display = 'inline-block';
+                clickCount = 0;
+            }
+        }
+    </script>
+</body>
+</html>

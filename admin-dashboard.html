@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Sozo Skills</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar h1 { font-size: 1.8em; }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .logout-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-card .icon {
+            font-size: 3em;
+            opacity: 0.2;
+        }
+        .main-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .section-header h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+        .filters {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 600;
+        }
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .export-btn {
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .export-btn:hover {
+            background: #229954;
+        }
+        .reset-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .reset-btn:hover {
+            background: #c0392b;
+        }
+        .refresh-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: #667eea;
+            color: white;
+        }
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-review {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+        .btn-view:hover {
+            background: #2980b9;
+        }
+        .btn-approve {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-approve:hover {
+            background: #229954;
+        }
+        .btn-reject {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-reject:hover {
+            background: #c0392b;
+        }
+        .btn-delete {
+            background: #95a5a6;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #7f8c8d;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 0;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            margin: 0;
+        }
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            opacity: 0.7;
+        }
+        .modal-body {
+            padding: 30px;
+        }
+        .detail-section {
+            margin-bottom: 30px;
+        }
+        .detail-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .detail-value {
+            color: #333;
+        }
+        .score-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .score-display .score {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        .score-display .label {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            font-size: 1.1em;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🎓 Sozo Skills Admin Dashboard</h1>
+        <div class="user-info">
+            <span id="adminUsername">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div>
+                    <h3>Total Applications</h3>
+                    <div class="number" id="totalApps">0</div>
+                </div>
+                <div class="icon">📄</div>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h3>Completed Assessments</h3>
+                    <div class="number" id="completedAssessments">0</div>
+                </div>
+                <div class="icon">✅</div>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h3>Pending Review</h3>
+                    <div class="number" id="pendingReview">0</div>
+                </div>
+                <div class="icon">⏳</div>
+            </div>
+            <div class="stat-card">
+                <div>
+                    <h3>Average Score</h3>
+                    <div class="number" id="avgScore">0.0</div>
+                </div>
+                <div class="icon">⭐</div>
+            </div>
+        </div>
+
+        <div class="main-panel">
+            <div class="section-header">
+                <h2>Applications Management</h2>
+                <div>
+                    <button class="refresh-btn" onclick="loadApplications()">🔄 Refresh</button>
+                    <button class="export-btn" onclick="exportToCSV()">📥 Export CSV</button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="filterStatus" onchange="filterApplications()">
+                        <option value="">All Status</option>
+                        <option value="Pending Assessment">Pending Assessment</option>
+                        <option value="Pending Review">Pending Review</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Program</label>
+                    <select id="filterProgram" onchange="filterApplications()">
+                        <option value="">All Programs</option>
+                        <option value="Artisan Baking">Artisan Baking</option>
+                        <option value="Barista">Barista</option>
+                        <option value="Hair">Hair</option>
+                        <option value="Beauty">Beauty</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Area</label>
+                    <select id="filterArea" onchange="filterApplications()">
+                        <option value="">All Areas</option>
+                        <option value="Vrygrond">Vrygrond</option>
+                        <option value="Muizenberg">Muizenberg</option>
+                        <option value="Lakeside">Lakeside</option>
+                        <option value="Ocean View">Ocean View</option>
+                        <option value="Fish Hoek">Fish Hoek</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" id="searchInput" placeholder="Name, ID..." onkeyup="filterApplications()">
+                </div>
+
+                <button class="reset-btn" onclick="resetFilters()">Reset</button>
+            </div>
+
+            <div class="table-container">
+                <table id="applicationsTable">
+                    <thead>
+                        <tr>
+                            <th>App ID</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Program</th>
+                            <th>Area</th>
+                            <th>Assessment</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicationsBody">
+                        <tr>
+                            <td colspan="9" class="loading">Loading applications...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Application Details</h2>
+                <span class="close" onclick="closeModal()">×</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // 🔥 CORRECTED GOOGLE APPS SCRIPT WEB APP URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFNRLMat37tVs6FdApyu33OjH6tZAiCiH52GfAW-DLpClZhhpU6zKdmiyY8nzimVcP/exec';
+
+        let allApplications = [];
+        let filteredApplications = [];
+
+        // Check if logged in, otherwise redirect to login page
+        if (sessionStorage.getItem('sozoAdminLoggedIn') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+
+        document.getElementById('adminUsername').textContent = sessionStorage.getItem('sozoAdminUser') || 'Admin';
+
+        function logout() {
+            sessionStorage.removeItem('sozoAdminLoggedIn');
+            sessionStorage.removeItem('sozoAdminUser');
+            sessionStorage.removeItem('sozoLoginTime');
+            window.location.href = 'admin-login.html';
+        }
+
+        window.onload = loadApplications;
+
+        async function loadApplications() {
+            document.getElementById('applicationsBody').innerHTML = '<tr><td colspan="9" class="loading">Loading applications...</td></tr>';
+            try {
+                const response = await fetch(SCRIPT_URL + '?action=fetchAll');
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Structure the data: merge assessment fields back into the main application object
+                    allApplications = result.data.map(app => {
+                        // Assuming assessment fields are part of the main row
+                        return {
+                            ...app,
+                            // Convert YES/NO to boolean for easier handling
+                            assessmentCompleted: app.assessmentCompleted === 'YES' ? 'Yes' : 'No',
+                            // Recreate a simple assessment object for easier display logic
+                            assessment: app.baselineScore ? {
+                                baselineScore: app.baselineScore,
+                                technicalKnowledge: app.technicalKnowledge,
+                                followInstructions: app.followInstructions,
+                                timeManagement: app.timeManagement,
+                                teamwork: app.teamwork,
+                                customerCommunication: app.customerCommunication,
+                                askingHelp: app.askingHelp,
+                                socialMedia: app.socialMedia,
+                                employmentImportance: app.employmentImportance,
+                                commitment: app.commitment,
+                                // Include other assessment fields if present
+                                existingSkills: app.existingSkills,
+                                toolsExperience: app.toolsExperience,
+                                languages: app.languages,
+                                smartphone: app.smartphone,
+                                computerUse: app.computerUse,
+                                businessInterest: app.businessInterest,
+                                goals: app.goals,
+                                challenges: app.challenges,
+                                supportNeeds: app.supportNeeds,
+                                familySupport: app.familySupport
+                            } : null
+                        };
+                    });
+                    filteredApplications = allApplications;
+                    updateStats(allApplications);
+                    displayApplications(filteredApplications);
+                } else {
+                    alert('Error loading data: ' + result.message);
+                    document.getElementById('applicationsBody').innerHTML = '<tr><td colspan="9" class="no-data">Error loading data. ' + result.message + '</td></tr>';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Connection error. Check Apps Script URL or deployment permissions.');
+                document.getElementById('applicationsBody').innerHTML = '<tr><td colspan="9" class="no-data">Failed to connect to backend.</td></tr>';
+            }
+        }
+
+        function updateStats(applications) {
+            const total = applications.length;
+            const completed = applications.filter(app => app.assessmentCompleted === 'Yes').length;
+            const pending = applications.filter(app => app.applicationStatus === 'Pending Review' || app.applicationStatus === 'Pending Assessment').length;
+            
+            // Calculate average score
+            const scores = applications
+                .filter(app => app.assessment && app.assessment.baselineScore && !isNaN(parseFloat(app.assessment.baselineScore)))
+                .map(app => parseFloat(app.assessment.baselineScore));
+            
+            const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2) : '0.0';
+
+            document.getElementById('totalApps').textContent = total;
+            document.getElementById('completedAssessments').textContent = completed;
+            document.getElementById('pendingReview').textContent = pending;
+            document.getElementById('avgScore').textContent = avgScore;
+        }
+
+        function displayApplications(applications) {
+            const tbody = document.getElementById('applicationsBody');
+            if (applications.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="no-data">No applications found matching the current filters.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = applications.map(app => {
+                const statusClass = app.applicationStatus === 'Pending Assessment' ? 'status-pending' :
+                                    app.applicationStatus === 'Pending Review' ? 'status-review' :
+                                    app.applicationStatus === 'Approved' ? 'status-approved' :
+                                    app.applicationStatus === 'Rejected' ? 'status-rejected' : '';
+                
+                const score = app.assessment ? app.assessment.baselineScore : 'N/A';
+                const assessmentStatus = app.assessmentCompleted === 'Yes' ? '✅ Yes' : '❌ No';
+
+                // Safely stringify the object for the viewApplication call
+                // Note: The previous code was using .replace(/'/g, "'") which is suspicious.
+                // We'll use a safer encoding method, or just use app.id to fetch/reference the full object.
+                // Since allApplications is global, we can just pass the ID.
+
+                return `
+                    <tr>
+                        <td>${app.id}</td>
+                        <td>${formatDate(app.submissionDate)}</td>
+                        <td>${app.firstName} ${app.lastName}</td>
+                        <td>${app.program}</td>
+                        <td>${app.area}</td>
+                        <td style="text-align: center;">${assessmentStatus}</td>
+                        <td><strong>${score}</strong></td>
+                        <td><span class="status-badge ${statusClass}">${app.applicationStatus}</span></td>
+                        <td>
+                            <button class="action-btn btn-view" onclick="viewApplication('${app.id}')">View</button>
+                            ${app.applicationStatus === 'Pending Review' || app.applicationStatus === 'Pending Assessment' ? `
+                                <button class="action-btn btn-approve" onclick="updateStatus('${app.id}', 'Approved')">Approve</button>
+                                <button class="action-btn btn-reject" onclick="updateStatus('${app.id}', 'Rejected')">Reject</button>
+                            ` : ''}
+                            <button class="action-btn btn-delete" onclick="deleteApplication('${app.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterApplications() {
+            const status = document.getElementById('filterStatus').value;
+            const program = document.getElementById('filterProgram').value;
+            const area = document.getElementById('filterArea').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredApplications = allApplications.filter(app => {
+                const matchStatus = !status || app.applicationStatus === status;
+                const matchProgram = !program || app.program === program;
+                const matchArea = !area || app.area === area;
+                const matchSearch = !search || 
+                                   (app.firstName && app.firstName.toLowerCase().includes(search)) || 
+                                   (app.lastName && app.lastName.toLowerCase().includes(search)) || 
+                                   (app.id && app.id.toLowerCase().includes(search)) || 
+                                   (app.mobile && app.mobile.includes(search));
+                return matchStatus && matchProgram && matchArea && matchSearch;
+            });
+            displayApplications(filteredApplications);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterProgram').value = '';
+            document.getElementById('filterArea').value = '';
+            document.getElementById('searchInput').value = '';
+            filteredApplications = allApplications;
+            displayApplications(filteredApplications);
+        }
+
+        function viewApplication(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                alert('Application details not found.');
+                return;
+            }
+            
+            const modal = document.getElementById('detailModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            let assessmentHTML = '';
+            if (app.assessment) {
+                const assessment = app.assessment;
+                assessmentHTML = `
+                    <div class="detail-section">
+                        <h3>📊 Assessment Results</h3>
+                        <div class="score-display">
+                            <div class="score">${assessment.baselineScore || 'N/A'}/5.0</div>
+                            <div class="label">Baseline Score</div>
+                        </div>
+
+                        <h4 style="margin-top: 20px; color: #667eea;">Skills & Practical</h4>
+                        <div class="detail-grid">
+                            <div class="detail-label">Tech Knowledge:</div> <div class="detail-value">${assessment.technicalKnowledge || 'N/A'}/5</div>
+                            <div class="detail-label">Follow Instructions:</div> <div class="detail-value">${assessment.followInstructions || 'N/A'}/5</div>
+                            <div class="detail-label">Time Management:</div> <div class="detail-value">${assessment.timeManagement || 'N/A'}/5</div>
+                            <div class="detail-label">Teamwork:</div> <div class="detail-value">${assessment.teamwork || 'N/A'}/5</div>
+                            <div class="detail-label">Existing Skills:</div> <div class="detail-value">${assessment.existingSkills || 'N/A'}</div>
+                            <div class="detail-label">Tools Experience:</div> <div class="detail-value">${assessment.toolsExperience || 'N/A'}</div>
+                        </div>
+
+                        <h4 style="margin-top: 20px; color: #667eea;">Communication & Digital</h4>
+                        <div class="detail-grid">
+                            <div class="detail-label">Customer Comms:</div> <div class="detail-value">${assessment.customerCommunication || 'N/A'}/5</div>
+                            <div class="detail-label">Asking for Help:</div> <div class="detail-value">${assessment.askingHelp || 'N/A'}/5</div>
+                            <div class="detail-label">Languages:</div> <div class="detail-value">${assessment.languages || 'N/A'}</div>
+                            <div class="detail-label">Smartphone:</div> <div class="detail-value">${assessment.smartphone || 'N/A'}</div>
+                            <div class="detail-label">Social Media:</div> <div class="detail-value">${assessment.socialMedia || 'N/A'}/5</div>
+                            <div class="detail-label">Computer Use:</div> <div class="detail-value">${assessment.computerUse || 'N/A'}</div>
+                        </div>
+
+                        <h4 style="margin-top: 20px; color: #667eea;">Commitment & Support</h4>
+                        <div class="detail-grid">
+                            <div class="detail-label">Commitment Level:</div> <div class="detail-value">${assessment.commitment || 'N/A'}/5</div>
+                            <div class="detail-label">Employment Importance:</div> <div class="detail-value">${assessment.employmentImportance || 'N/A'}/5</div>
+                            <div class="detail-label">Business Interest:</div> <div class="detail-value">${assessment.businessInterest || 'N/A'}</div>
+                            <div class="detail-label">Family Support:</div> <div class="detail-value">${assessment.familySupport || 'N/A'}</div>
+                        </div>
+                        <h4 style="margin-top: 20px; color: #667eea;">Goals & Challenges</h4>
+                        <div class="detail-grid" style="grid-template-columns: 1fr;">
+                            <div class="detail-label">Goals:</div> <div class="detail-value">${assessment.goals || 'N/A'}</div>
+                            <div class="detail-label">Challenges:</div> <div class="detail-value">${assessment.challenges || 'N/A'}</div>
+                            <div class="detail-label">Support Needs:</div> <div class="detail-value">${assessment.supportNeeds || 'None specified'}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                assessmentHTML = `
+                    <div class="detail-section">
+                        <h3>📊 Assessment</h3>
+                        <p style="color: #e74c3c;">Assessment not yet completed.</p>
+                    </div>
+                `;
+            }
+
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <h3>👤 Personal Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-label">Application ID:</div> <div class="detail-value"><strong>${app.id}</strong></div>
+                        <div class="detail-label">Full Name:</div> <div class="detail-value">${app.firstName} ${app.lastName}</div>
+                        <div class="detail-label">Program:</div> <div class="detail-value">${app.program}</div>
+                        <div class="detail-label">Status:</div> <div class="detail-value"><span class="status-badge ${app.applicationStatus.includes('Pending') ? 'status-review' : app.applicationStatus.toLowerCase().includes('approved') ? 'status-approved' : 'status-rejected'}">${app.applicationStatus}</span></div>
+                        <div class="detail-label">Date Submitted:</div> <div class="detail-value">${formatDate(app.submissionDate)}</div>
+                        <div class="detail-label">Last Updated:</div> <div class="detail-value">${app.lastUpdated || 'N/A'}</div>
+                    </div>
+                    <h4 style="margin-top: 20px; color: #667eea;">Contact & Location</h4>
+                    <div class="detail-grid">
+                        <div class="detail-label">Mobile:</div> <div class="detail-value">${app.mobile}</div>
+                        <div class="detail-label">Email:</div> <div class="detail-value">${app.email || 'N/A'}</div>
+                        <div class="detail-label">Area:</div> <div class="detail-value">${app.area}</div>
+                        <div class="detail-label">Address:</div> <div class="detail-value">${app.address || 'N/A'}</div>
+                    </div>
+                    <h4 style="margin-top: 20px; color: #667eea;">Demographics & Employment</h4>
+                    <div class="detail-grid">
+                        <div class="detail-label">ID Number:</div> <div class="detail-value">${app.idNumber}</div>
+                        <div class="detail-label">Age/Gender/Race:</div> <div class="detail-value">${app.age} / ${app.gender} / ${app.race}</div>
+                        <div class="detail-label">Disability:</div> <div class="detail-value">${app.disability} ${app.disability === 'Yes' ? ' (' + app.disabilityType + ')' : ''}</div>
+                        <div class="detail-label">Education:</div> <div class="detail-value">${app.education}</div>
+                        <div class="detail-label">Employment Status:</div> <div class="detail-value">${app.employmentStatus}</div>
+                        <div class="detail-label">Income:</div> <div class="detail-value">${app.income}</div>
+                    </div>
+                </div>
+                ${assessmentHTML}
+            `;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        async function updateStatus(appId, newStatus) {
+            if (!confirm(`Are you sure you want to change the status to ${newStatus}?`)) {
+                return;
+            }
+            try {
+                // Update in Google Sheets via Apps Script
+                const response = await fetch(SCRIPT_URL + '?action=updateStatus&id=' + appId + '&status=' + newStatus);
+                const result = await response.json();
+
+                if (result.status === 'success' || response.ok) {
+                    alert(`Application status updated to ${newStatus} successfully!`);
+                    loadApplications(); // Refresh data
+                } else {
+                    throw new Error('Update failed');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Error updating status. Please try again.');
+            }
+        }
+
+        async function deleteApplication(appId) {
+            if (!confirm('Are you sure you want to delete this application? This cannot be undone.')) {
+                return;
+            }
+            try {
+                // 🔥 CORRECTED ACTION PARAMETER
+                const response = await fetch(SCRIPT_URL + '?action=deleteApplication&id=' + appId); 
+                const result = await response.json();
+
+                if (result.status === 'success' || response.ok) {
+                    alert(`Application ${appId} deleted successfully!`);
+                    loadApplications(); // Refresh data
+                } else {
+                    throw new Error('Delete failed');
+                }
+            } catch (error) {
+                console.error('Error deleting application:', error);
+                alert('Error deleting application. Please try again.');
+            }
+        }
+        
+        // Helper function for CSV export (if needed) and date formatting
+        function exportToCSV() {
+            if (filteredApplications.length === 0) {
+                alert("No data to export.");
+                return;
+            }
+
+            // Define CSV headers (must match keys in the application objects)
+            const headers = [
+                "id", "submissionDate", "firstName", "lastName", "idNumber", "age", "gender", "race", 
+                "disability", "disabilityType", "mobile", "altMobile", "email", "area", "address", 
+                "education", "employmentStatus", "income", "program", "existingSkills", "toolsExperience",
+                "technicalKnowledge", "followInstructions", "timeManagement", "teamwork", "customerCommunication", 
+                "languages", "askingHelp", "smartphone", "socialMedia", "computerUse", "employmentImportance", 
+                "businessInterest", "commitment", "goals", "challenges", "supportNeeds", "familySupport", 
+                "baselineScore", "assessmentCompleted", "applicationStatus", "lastUpdated"
+            ];
+
+            const csvData = [
+                headers.join(',') // Add header row
+            ];
+
+            filteredApplications.forEach(app => {
+                const row = headers.map(key => {
+                    let value = app[key] !== undefined ? app[key] : app.assessment && app.assessment[key] !== undefined ? app.assessment[key] : '';
+                    if (value === null || value === undefined) return '';
+                    if (typeof value === 'string') {
+                        // Escape quotes and ensure commas don't break the CSV format
+                        value = value.replace(/"/g, '""');
+                        if (value.includes(',') || value.includes('\n')) {
+                            value = `"${value}"`;
+                        }
+                    }
+                    return value;
+                }).join(',');
+                csvData.push(row);
+            });
+
+            // Create download
+            const blob = new Blob([csvData.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sozo-applications-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            if (isNaN(date)) return dateString;
+            return date.toLocaleDateString('en-ZA', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>

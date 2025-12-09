@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Sozo Skills</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            text-align: center;
+        }
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 50px 40px;
+        }
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s ease;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.95; }
+        .content {
+            padding: 40px;
+            color: #333;
+        }
+        .content h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 4px solid #667eea;
+            text-align: left;
+        }
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-item:last-child { border-bottom: none; }
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            width: 180px;
+        }
+        .info-value {
+            color: #333;
+        }
+        .next-steps {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .next-steps h3 {
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+        .next-steps li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .next-steps li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .contact-info {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 30px 0;
+        }
+        .contact-info h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .contact-info p {
+            color: #856404;
+            font-size: 1em;
+            margin: 5px 0;
+        }
+        .btn-home {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .content { padding: 20px; }
+            .info-label { display: block; width: 100%; margin-bottom: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon">✅</div>
+            <h1>Application Submitted Successfully!</h1>
+            <p>Your journey with Sozo Skills begins now</p>
+        </div>
+
+        <div class="content">
+            <h2>Thank You for Completing Your Application & Assessment</h2>
+            <p>We have successfully received your application and pre-training assessment. Our team will review your submission and contact you soon.</p>
+
+            <div class="info-box" id="applicationSummary">
+                <h3>📋 Your Application Summary</h3>
+                <div id="summaryContent"></div>
+            </div>
+
+            <div class="next-steps">
+                <h3>📌 What Happens Next?</h3>
+                <ul>
+                    <li><strong>Review Process:</strong> Our team will review your application within 5-7 business days</li>
+                    <li><strong>Notification:</strong> We will contact you via phone with the outcome</li>
+                    <li><strong>Interviews:</strong> Shortlisted candidates may be invited for an interview</li>
+                    <li><strong>Training Start:</strong> Successful applicants will receive training dates and details</li>
+                    <li><strong>Keep Your Phone On:</strong> Please ensure your contact number is active</li>
+                </ul>
+            </div>
+
+            <div class="contact-info">
+                <h4>📞 Need Help or Have Questions?</h4>
+                <p><strong>Call:</strong> 021 825 5529</p>
+                <p><strong>Email:</strong> Nigel@sozo.org.za/Juanita@sozo.org.za</p>
+                <p><strong>Office Hours:</strong> Monday - Friday, 8:00 AM - 4:30 PM</p>
+            </div>
+
+            <p style="margin-top: 30px;"><strong>Please save your Application ID for future reference.</strong></p>
+            
+            <a href="https://sozo.org.za/" class="btn-home">Return to Home</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentAppId = localStorage.getItem('currentApplicationId');
+            const applications = JSON.parse(localStorage.getItem('sozoApplications')) || [];
+            const application = applications.find(app => app.id === currentAppId);
+
+            if (application) {
+                const summaryContent = document.getElementById('summaryContent');
+                summaryContent.innerHTML = `
+                    <div class="info-item">
+                        <span class="info-label">Application ID:</span>
+                        <span class="info-value"><strong>${application.id}</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Full Name:</span>
+                        <span class="info-value">$${application.firstName}$$ {application.lastName}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Program:</span>
+                        <span class="info-value">${application.program}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Contact Number:</span>
+                        <span class="info-value">${application.mobile}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">${application.email || 'Not provided'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Submission Date:</span>
+                        <span class="info-value">${new Date(application.submissionDate).toLocaleDateString()}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value" style="color: #27ae60; font-weight: 600;">${application.applicationStatus}</span>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
