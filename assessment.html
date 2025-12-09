@@ -28,30 +28,52 @@
         }
         .header h1 { font-size: 2.5em; margin-bottom: 10px; }
         .form-section { padding: 40px; }
-        .form-group { margin-bottom: 25px; }
+        .form-group { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 25px; }
+        .form-group:last-child { border-bottom: none; }
+        
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #333;
             font-weight: 600;
+            font-size: 1.1em;
         }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
+        .rating-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
         }
+        .rating-group > div {
+            flex-basis: 18%; /* Adjusted to fit 5 options */
+            text-align: center;
+        }
+        input[type="radio"] {
+            margin-bottom: 5px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        .rating-group span {
+            display: block;
+            font-size: 0.9em;
+            color: #555;
+        }
+
         .btn-submit {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1.2em;
             font-weight: 600;
             cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
         }
         .btn-submit:disabled {
             background: #ccc;
@@ -63,18 +85,9 @@
             color: #667eea;
             display: none;
         }
-        .section-title {
-            color: #667eea;
-            margin: 30px 0 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
         .app-id-display {
-            background: #f0f8ff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border-left: 5px solid #667eea;
+            text-align: center;
+            margin-top: 15px;
             font-weight: 600;
             color: #333;
         }
@@ -83,235 +96,153 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📝 Pre-Training Assessment</h1>
-            <p>Help us understand your skills and needs</p>
+            <h1>Pre-Training Assessment</h1>
+            <p>Please rate your current skill level for each statement (1 = Low, 5 = High).</p>
         </div>
 
         <div class="form-section">
-            <div class="app-id-display" id="appIdDisplay">
-                Loading Application Details...
-            </div>
-            
+            <div class="app-id-display" id="appIdDisplay"></div>
+
             <form id="assessmentForm">
-                <h2 class="section-title">Technical Knowledge</h2>
-
-                <div class="form-group">
-                    <label>Rate your technical knowledge in your chosen field (1-5)</label>
-                    <select name="technicalKnowledge" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - No knowledge</option>
-                        <option value="2">2 - Basic</option>
-                        <option value="3">3 - Moderate</option>
-                        <option value="4">4 - Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Have you used tools/equipment related to your chosen program?</label>
-                    <select name="toolsExperience" required>
-                        <option value="">Select</option>
-                        <option value="Never">Never</option>
-                        <option value="A few times">A few times</option>
-                        <option value="Regularly">Regularly</option>
-                        <option value="Extensively">Extensively</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>List any existing skills relevant to your program</label>
-                    <textarea name="existingSkills" rows="3" required></textarea>
-                </div>
-
-                <h2 class="section-title">Practical Skills</h2>
-
-                <div class="form-group">
-                    <label>How well can you follow instructions? (1-5)</label>
-                    <select name="followInstructions" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Rate your time management skills (1-5)</label>
-                    <select name="timeManagement" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>How comfortable are you working in a team? (1-5)</label>
-                    <select name="teamwork" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Not comfortable</option>
-                        <option value="2">2 - Slightly comfortable</option>
-                        <option value="3">3 - Comfortable</option>
-                        <option value="4">4 - Very comfortable</option>
-                        <option value="5">5 - Extremely comfortable</option>
-                    </select>
-                </div>
-
-                <h2 class="section-title">Communication</h2>
-
-                <div class="form-group">
-                    <label>Rate your ability to communicate with customers (1-5)</label>
-                    <select name="customerCommunication" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>What languages do you speak?</label>
-                    <input type="text" name="languages" required placeholder="e.g., English, Xhosa, Afrikaans">
-                </div>
-
-                <div class="form-group">
-                    <label>How comfortable are you asking for help when needed? (1-5)</label>
-                    <select name="askingHelp" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Not comfortable</option>
-                        <option value="2">2 - Slightly comfortable</option>
-                        <option value="3">3 - Comfortable</option>
-                        <option value="4">4 - Very comfortable</option>
-                        <option value="5">5 - Extremely comfortable</option>
-                    </select>
-                </div>
-
-                <h2 class="section-title">Digital Literacy</h2>
+                <h2 style="color: #667eea; margin-bottom: 20px;">Baseline Skills Assessment</h2>
                 
                 <div class="form-group">
-                    <label>Do you own a smartphone?</label>
-                    <select name="smartphone" required>
-                        <option value="">Select</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <label>1. Time Management: I can effectively plan and prioritize tasks.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="timeManagement" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="timeManagement" value="2"><span>2</span></div>
+                        <div><input type="radio" name="timeManagement" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="timeManagement" value="4"><span>4</span></div>
+                        <div><input type="radio" name="timeManagement" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>How comfortable are you with social media and apps? (1-5)</label>
-                    <select name="socialMedia" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Not comfortable</option>
-                        <option value="2">2 - Slightly comfortable</option>
-                        <option value="3">3 - Comfortable</option>
-                        <option value="4">4 - Very comfortable</option>
-                        <option value="5">5 - Extremely comfortable</option>
-                    </select>
+                    <label>2. Computer Literacy: I am confident using basic computer software (e.g., email, word processing).</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="computerLiteracy" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="computerLiteracy" value="2"><span>2</span></div>
+                        <div><input type="radio" name="computerLiteracy" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="computerLiteracy" value="4"><span>4</span></div>
+                        <div><input type="radio" name="computerLiteracy" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>How often do you use a computer (desktop/laptop)?</label>
-                    <select name="computerUse" required>
-                        <option value="">Select</option>
-                        <option value="Never">Never</option>
-                        <option value="Rarely">Rarely</option>
-                        <option value="Sometimes">Sometimes</option>
-                        <option value="Daily">Daily</option>
-                    </select>
-                </div>
-
-                <h2 class="section-title">Work Readiness & Commitment</h2>
-
-                <div class="form-group">
-                    <label>How important is finding stable employment after this training? (1-5)</label>
-                    <select name="employmentImportance" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Not important</option>
-                        <option value="2">2 - Slightly important</option>
-                        <option value="3">3 - Moderately important</option>
-                        <option value="4">4 - Very important</option>
-                        <option value="5">5 - Extremely important</option>
-                    </select>
+                    <label>3. Problem Solving: I can identify issues and find practical solutions independently.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="problemSolving" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="problemSolving" value="2"><span>2</span></div>
+                        <div><input type="radio" name="problemSolving" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="problemSolving" value="4"><span>4</span></div>
+                        <div><input type="radio" name="problemSolving" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Are you interested in starting your own business one day?</label>
-                    <select name="businessInterest" required>
-                        <option value="">Select</option>
-                        <option value="No">No</option>
-                        <option value="Maybe">Maybe</option>
-                        <option value="Yes">Yes</option>
-                    </select>
+                    <label>4. Written Communication: I can write clearly and professionally.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="writtenCommunication" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="writtenCommunication" value="2"><span>2</span></div>
+                        <div><input type="radio" name="writtenCommunication" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="writtenCommunication" value="4"><span>4</span></div>
+                        <div><input type="radio" name="writtenCommunication" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Rate your commitment to completing the full training program (1-5)</label>
-                    <select name="commitment" required>
-                        <option value="">Select</option>
-                        <option value="1">1 - Low</option>
-                        <option value="2">2 - Moderate</option>
-                        <option value="3">3 - High</option>
-                        <option value="4">4 - Very High</option>
-                        <option value="5">5 - Absolute</option>
-                    </select>
+                    <label>5. Teamwork: I work well with others and contribute positively to a group.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="teamwork" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="teamwork" value="2"><span>2</span></div>
+                        <div><input type="radio" name="teamwork" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="teamwork" value="4"><span>4</span></div>
+                        <div><input type="radio" name="teamwork" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>What are your goals after completing this training?</label>
-                    <textarea name="goals" rows="4" required></textarea>
-                </div>
-
-                <h2 class="section-title">Support Needs</h2>
-
-                <div class="form-group">
-                    <label>What challenges do you anticipate during training?</label>
-                    <textarea name="challenges" rows="3" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>What support would help you succeed?</label>
-                    <textarea name="supportNeeds" rows="3"></textarea>
+                    <label>6. Customer Communication: I can interact with customers/clients politely and effectively.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="customerCommunication" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="customerCommunication" value="2"><span>2</span></div>
+                        <div><input type="radio" name="customerCommunication" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="customerCommunication" value="4"><span>4</span></div>
+                        <div><input type="radio" name="customerCommunication" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Do you have family support for this training?</label>
-                    <select name="familySupport" required>
-                        <option value="">Select</option>
-                        <option value="No support">No support</option>
-                        <option value="Some support">Some support</option>
-                        <option value="Full support">Full support</option>
-                    </select>
+                    <label>7. Asking for Help: I know when and how to ask for assistance when needed.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="askingHelp" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="askingHelp" value="2"><span>2</span></div>
+                        <div><input type="radio" name="askingHelp" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="askingHelp" value="4"><span>4</span></div>
+                        <div><input type="radio" name="askingHelp" value="5"><span>5 (High)</span></div>
+                    </div>
+                </div>
+
+                <h2 style="color: #667eea; margin: 30px 0 20px;">Attitude & Mindset</h2>
+
+                <div class="form-group">
+                    <label>8. Social Media Usage: I use social media responsibly and professionally.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="socialMedia" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="socialMedia" value="2"><span>2</span></div>
+                        <div><input type="radio" name="socialMedia" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="socialMedia" value="4"><span>4</span></div>
+                        <div><input type="radio" name="socialMedia" value="5"><span>5 (High)</span></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>9. Importance of Employment: I see finding and keeping a job as a major personal goal.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="employmentImportance" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="employmentImportance" value="2"><span>2</span></div>
+                        <div><input type="radio" name="employmentImportance" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="employmentImportance" value="4"><span>4</span></div>
+                        <div><input type="radio" name="employmentImportance" value="5"><span>5 (High)</span></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>10. Commitment: I am fully committed to attending all training sessions.</label>
+                    <div class="rating-group">
+                        <div><input type="radio" name="commitment" value="1" required><span>1 (Low)</span></div>
+                        <div><input type="radio" name="commitment" value="2"><span>2</span></div>
+                        <div><input type="radio" name="commitment" value="3"><span>3 (Average)</span></div>
+                        <div><input type="radio" name="commitment" value="4"><span>4</span></div>
+                        <div><input type="radio" name="commitment" value="5"><span>5 (High)</span></div>
+                    </div>
                 </div>
 
                 <div class="loading" id="loadingMessage">
-                    <p>Saving your assessment... Please wait.</p>
+                    <p>Submitting your assessment... Please wait.</p>
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">Complete Assessment</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Submit Assessment & Finish</button>
             </form>
         </div>
     </div>
 
     <script>
         // 🔥 CORRECTED GOOGLE APPS SCRIPT WEB APP URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFNRLMat37tVs6FdApyu33OjH6tZAiCiH52GfAW-DLpClZhhpU6zKdmiyY8nzimVcP/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6qqqrg_Pbno6yK1kPyT0ii3hJryiukoLg9dNNd_043Y5zcmeMoC4qXWhAx3xED9qDdg/exec';
 
         const appId = sessionStorage.getItem('currentApplicationId');
         if (!appId) {
-            alert('Error: Application ID not found. Please start the application form first.');
+            alert("No active application ID found. Please start from the application form.");
             window.location.href = 'index.html';
         } else {
-            document.getElementById('appIdDisplay').innerHTML = `<strong>Application ID:</strong> ${appId}`;
+            document.getElementById('appIdDisplay').textContent = `Application ID: ${appId}`;
         }
+
 
         document.getElementById('assessmentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
             const submitBtn = document.getElementById('submitBtn');
             const loadingMessage = document.getElementById('loadingMessage');
 
@@ -321,67 +252,50 @@
             const formData = new FormData(this);
             const data = {
                 type: 'assessment',
-                appId: appId // Use the stored ID to link the assessment
+                id: appId,
+                assessmentDate: new Date().toLocaleString()
             };
             
             formData.forEach((value, key) => {
                 data[key] = value;
             });
 
-            // Calculate the baseline score average (must use number values 1-5)
+            // Calculate baseline score
             const scores = [
-                parseInt(data.technicalKnowledge || 0),
-                parseInt(data.followInstructions || 0),
-                parseInt(data.timeManagement || 0),
-                parseInt(data.teamwork || 0),
-                parseInt(data.customerCommunication || 0),
-                parseInt(data.askingHelp || 0),
-                parseInt(data.socialMedia || 0),
-                parseInt(data.employmentImportance || 0),
-                parseInt(data.commitment || 0)
+                parseInt(data.timeManagement),
+                parseInt(data.computerLiteracy),
+                parseInt(data.problemSolving),
+                parseInt(data.writtenCommunication),
+                parseInt(data.teamwork),
+                parseInt(data.customerCommunication),
+                parseInt(data.askingHelp),
+                parseInt(data.socialMedia),
+                parseInt(data.employmentImportance),
+                parseInt(data.commitment)
             ];
 
-            // Filter out any 0s from unselected fields (though they are required)
-            const validScores = scores.filter(s => s > 0);
-            
-            // Note: Your original file included selfDiscipline and punctuality which are not in the form, 
-            // but these fields are in the form: technicalKnowledge, followInstructions. 
-            // I'm basing the average on the 9 x 1-5 scale fields available in the form.
-            const avgScore = validScores.length > 0 ? (validScores.reduce((a, b) => a + b, 0) / validScores.length).toFixed(2) : '0.0';
-            
+            const avgScore = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
             data.baselineScore = avgScore;
-            data.assessmentCompleted = 'YES'; // Mark as completed
-            data.applicationStatus = 'Pending Review'; // Update status
 
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    body: JSON.stringify(data)
                 });
 
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // Update stored application data to include assessment details for thank you page
-                    let applicationData = JSON.parse(sessionStorage.getItem('applicationData'));
-                    if (applicationData) {
-                        Object.assign(applicationData, data);
-                        sessionStorage.setItem('applicationData', JSON.stringify(applicationData));
-                    }
-                    
                     sessionStorage.removeItem('currentApplicationId');
-                    alert(`Assessment completed successfully! Your Baseline Score is: ${avgScore}/5.0`);
-                    window.location.href = 'thankyou.html'; // Redirect to the thank you page
+                    alert(`Assessment completed successfully! Your Application ID: ${appId}\nBaseline Score: ${avgScore}/5.0\nThank you! We will review your application and contact you soon.`);
+                    window.location.href = 'index.html';
                 } else {
                     throw new Error(result.message || 'Submission failed');
                 }
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error submitting assessment. Please try again. Check your browser console for details.');
+                alert('Error submitting assessment. Please try again.');
                 submitBtn.disabled = false;
                 loadingMessage.style.display = 'none';
             }
