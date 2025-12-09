@@ -206,28 +206,32 @@
                     <select name="employmentStatus" required>
                         <option value="">Select</option>
                         <option value="Unemployed">Unemployed</option>
-                        <option value="Employed - Full Time">Employed - Full Time</option>
-                        <option value="Employed - Part Time">Employed - Part Time</option>
-                        <option value="Self-Employed">Self-Employed</option>
-                        <option value="Student">Student</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Self-employed">Self-employed</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Monthly Household Income (R) <span class="required">*</span></label>
+                    <label>Household Monthly Income <span class="required">*</span></label>
                     <select name="income" required>
-                        <option value="">Select Income Bracket</option>
-                        <option value="0-R1000">R0 - R1,000</option>
-                        <option value="R1001-R3000">R1,001 - R3,000</option>
-                        <option value="R3001-R5000">R3,001 - R5,000</option>
-                        <option value="R5001+">R5,001+</option>
+                        <option value="">Select</option>
+                        <option value="R0 - R1000">R0 - R1,000</option>
+                        <option value="R1001 - R3500">R1,001 - R3,500</option>
+                        <option value="R3501 - R7500">R3,501 - R7,500</option>
+                        <option value="Above R7500">Above R7,500</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Number of Dependents <span class="required">*</span></label>
+                    <input type="number" name="dependents" required min="0">
                 </div>
 
                 <h2 style="color: #667eea; margin: 30px 0 20px;">Program Selection</h2>
 
                 <div class="form-group">
-                    <label>Which program are you applying for? <span class="required">*</span></label>
+                    <label>Select Training Program <span class="required">*</span></label>
                     <select name="program" required>
                         <option value="">Select Program</option>
                         <option value="Artisan Baking">Artisan Baking</option>
@@ -236,30 +240,77 @@
                         <option value="Beauty">Beauty</option>
                     </select>
                 </div>
-                
+
+                <div class="form-group">
+                    <label>Why do you want to join this program? <span class="required">*</span></label>
+                    <textarea name="motivation" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have previous experience in this field? <span class="required">*</span></label>
+                    <select name="experience" required onchange="toggleExperienceDetails(this)">
+                        <option value="">Select</option>
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="experienceDetailsGroup" style="display: none;">
+                    <label>Please describe your experience</label>
+                    <textarea name="experienceDetails" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>How did you hear about us? <span class="required">*</span></label>
+                    <select name="referralSource" required>
+                        <option value="">Select</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Friend/Family">Friend/Family</option>
+                        <option value="Community Notice">Community Notice</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have reliable transportation? <span class="required">*</span></label>
+                    <select name="transport" required>
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Any special requirements or accommodations needed?</label>
+                    <textarea name="specialRequirements" rows="3"></textarea>
+                </div>
+
                 <div class="loading" id="loadingMessage">
                     <p>Submitting your application... Please wait.</p>
                 </div>
 
-                <button type="submit" class="btn-submit" id="submitBtn">Submit Application & Start Assessment</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Submit Application</button>
             </form>
         </div>
     </div>
 
     <script>
         // 🔥 CORRECTED GOOGLE APPS SCRIPT WEB APP URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFNRLMat37tVs6FdApyu33OjH6tZAiCiH52GfAW-DLpClZhhpU6zKdmiyY8nzimVcP/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6qqqrg_Pbno6yK1kPyT0ii3hJryiukoLg9dNNd_043Y5zcmeMoC4qXWhAx3xED9qDdg/exec';
 
         function toggleDisabilityType(select) {
             const group = document.getElementById('disabilityTypeGroup');
             group.style.display = select.value === 'Yes' ? 'block' : 'none';
-            if (select.value !== 'Yes') {
-                document.querySelector('[name="disabilityType"]').value = '';
-            }
+        }
+
+        function toggleExperienceDetails(select) {
+            const group = document.getElementById('experienceDetailsGroup');
+            group.style.display = select.value === 'Yes' ? 'block' : 'none';
         }
 
         document.getElementById('applicationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
             const submitBtn = document.getElementById('submitBtn');
             const loadingMessage = document.getElementById('loadingMessage');
 
@@ -279,26 +330,19 @@
             const appId = 'SS-' + Date.now().toString().slice(-8);
             data.id = appId;
             data.submissionDate = new Date().toLocaleString();
-            data.applicationStatus = 'Pending Assessment'; // Initialize status
-            data.assessmentCompleted = 'NO'; // Initialize assessment flag
 
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    body: JSON.stringify(data)
                 });
 
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // Store full application data for assessment and thank you page
+                    // Store app ID for assessment
                     sessionStorage.setItem('currentApplicationId', appId);
-                    sessionStorage.setItem('applicationData', JSON.stringify(data));
-                    
-                    alert('Application submitted successfully! Your Application ID: ' + appId + '. You will now start the Assessment.');
+                    alert('Application submitted successfully! Your Application ID: ' + appId);
                     window.location.href = 'assessment.html';
                 } else {
                     throw new Error(result.message || 'Submission failed');
@@ -306,7 +350,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error submitting application. Please try again. Check your browser console for details.');
+                alert('Error submitting application. Please try again.');
                 submitBtn.disabled = false;
                 loadingMessage.style.display = 'none';
             }
